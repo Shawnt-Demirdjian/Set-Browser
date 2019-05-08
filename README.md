@@ -24,3 +24,7 @@ SET is a puzzle, competitive card game. You can see the rules [here](https://www
   - Number
   - Shading
     - Property of SVGs
+- Help
+  - Shuffle cards on table
+  - Add 3 cards to table (max 15)
+  - Check if any SETs exist on table
