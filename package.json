@@ -1,0 +1,14 @@
+{
+  "name": "Set-Browser",
+  "version": "1.0.0",
+  "description": "The game SET built to play in-browser.",
+  "main": "index.html",
+  "repository": "git@github.com:Shawnt-Demirdjian/Set-Browser.git",
+  "author": "Shawnt-Demirdjian <shawntdemirdjian@gmail.com>",
+  "license": "Unlicense",
+  "private": true,
+  "dependencies": {
+    "jquery": "^3.4.1",
+    "js-combinatorics": "^0.5.4"
+  }
+}
