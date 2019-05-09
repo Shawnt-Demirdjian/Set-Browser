@@ -5,29 +5,26 @@ $(document).ready(() => {
 	let workingSet = [];
 
 	// Display first 12 cards
-	for (gameDeck.nextCardIndex; gameDeck.nextCardIndex < 12; gameDeck.nextCardIndex++) {
-		let card = gameDeck.deck[gameDeck.nextCardIndex];
-		$("#cards").append(`<div class="card" data-cardIndex=${gameDeck.nextCardIndex}>${card.color}<br>${card.shape}<br>${card.shading}<br>${card.number}</div>`);
-		$(".card").last().css("border-color", card.color);
-	}
+	addCards(12);
 
 	// clicking on cards
 	// toggle active styling and add to workingSet
 	// max of three selected
-	$("#cards").on("click", ".card", (e) => {
+	$("#table").on("click", ".card-cover", (e) => {
+		let targetCard = $(e.target).parent(".card");
 		// get the index of the card the selected
-		let selectedCardIndex = $(e.target).attr("data-cardIndex");
+		let selectedCardIndex = targetCard.attr("data-cardIndex");
 		// get the index of the card in the workingSet (if selected already)
 		let selectedIndex = workingSet.indexOf(selectedCardIndex);
 		if (selectedIndex === -1 && workingSet.length !== 3) {
 			// select
 			// make active and push onto workingSet
-			$(e.target).addClass("card-active");
+			targetCard.addClass("card-active");
 			workingSet.push(selectedCardIndex);
 		} else if (selectedIndex !== -1) {
 			// deselect
 			// remove active and remove from workingSet
-			$(e.target).removeClass("card-active");
+			targetCard.removeClass("card-active");
 			workingSet.splice(selectedIndex, 1);
 		}
 
@@ -42,7 +39,7 @@ $(document).ready(() => {
 	// Check if workingSet is correct
 	// announce result
 	// add new cards if necessary
-	$("#check-set-btn").click((e) => {
+	$("#check-set-btn").on("click", (e) => {
 		let result = checkSet([gameDeck.deck[workingSet[0]], gameDeck.deck[workingSet[1]], gameDeck.deck[workingSet[2]]]);
 
 		if (result) {
@@ -65,10 +62,21 @@ $(document).ready(() => {
 		workingSet.forEach(element => {
 			$(`.card[data-cardIndex=${element}]`).remove();
 		});
-		for (let i = 0; i < 3; i++) {
+		addCards(3);
+	}
+
+	// adds cards to the table
+	// defaults to 1 card
+	function addCards(number) {
+		for (let i = 0; i < number; i++) {
 			let card = gameDeck.deck[gameDeck.nextCardIndex];
-			$("#cards").append(`<div class="card" data-cardIndex=${gameDeck.nextCardIndex++}>${card.color}<br>${card.shape}<br>${card.shading}<br>${card.number}</div>`);
-			$(".card").last().css("border-color", card.color);
+			let cardElement = `<div class="card card-${card.color}" data-cardIndex=${gameDeck.nextCardIndex}>`;
+			for (let i = 0; i < card.number; i++) {
+				cardElement += `<img class="shape" src="/images/${card.shape}/${card.shading}/${card.color}.svg">`;
+			}
+			cardElement += "<div class='card-cover'></div></div>";
+			gameDeck.nextCardIndex++;
+			$("#table").append(cardElement);
 		}
 	}
 

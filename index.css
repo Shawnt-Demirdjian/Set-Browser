@@ -10,26 +10,32 @@ body {
 	color: white;
 }
 
-#cards {
+#table {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
 	align-items: center;
 	justify-content: center;
 
-	width: 500px;
+	/* width: 75vw; */
 }
 
 .card {
+	display: flex;
+	align-items: center;
+	justify-content: space-evenly;
+	flex-direction: row;
+
+
 	border-width: 2px;
 	border-style: solid;
 
-	width: 100px;
-	height: 100px;
-
+	padding: 10px;
+	height: 150px;
+	width: 200px;
 	margin: 5px;
 
-	text-align: center;
+	position: relative;
 }
 
 .card:hover {
@@ -43,6 +49,18 @@ body {
 
 .card-active:hover {
 	background-color: rgba(255, 255, 255, 0.521);
+}
+
+.card-GREEN {
+	border-color: #00a950;
+}
+
+.card-RED {
+	border-color: #ea1c2d;
+}
+
+.card-PURPLE {
+	border-color: #8051a4;
 }
 
 #check-set {
@@ -59,4 +77,14 @@ body {
 #announcement {
 	visibility: hidden;
 
+}
+
+.shape {
+	height: 100px;
+}
+
+.card-cover {
+	position: absolute;
+	height: 100%;
+	width: 100%;
 }
