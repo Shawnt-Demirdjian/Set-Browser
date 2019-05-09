@@ -56,11 +56,11 @@ body {
 }
 
 .valid-color {
-	color: var(--green);
+	color: var(--green) !important;
 }
 
 .invalid-color {
-	color: var(--red);
+	color: var(--red) !important;
 }
 
 /* Container to hold all cards */
@@ -150,6 +150,7 @@ body {
 #buttons button {
 	font-size: 1.3em;
 	padding: 0.7em;
+	width: 9em;
 
 	color: var(--text-color);
 	background-color: var(--bg-color);

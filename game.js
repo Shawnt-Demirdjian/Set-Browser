@@ -75,6 +75,26 @@ $(document).ready(() => {
 		$("#check-set").attr("disabled", true);
 	});
 
+	// Generates all combinations of cards on table
+	// tests until we hit a working combination
+	// announce result
+	$("#is-possible").on("click", (e) => {
+		let cardsOnTable = $(".card").map((index, element) => {
+			return $(element).attr("data-cardIndex")
+		}).get();
+		allCombinations = Combinatorics.combination(cardsOnTable, 3);
+		let currentCombo = [];
+		while (currentCombo = allCombinations.next()) {
+			if (checkSet([gameDeck.deck[currentCombo[0]], gameDeck.deck[currentCombo[1]], gameDeck.deck[currentCombo[2]]])) {
+				setPossible(true);
+				break;
+			}
+		}
+		if (typeof allCombinations.next() == "undefined") {
+			setPossible(false);
+		}
+	});
+
 	// removes cards in workingSet from table
 	// adds next 3 cards from deck
 	function removeCards() {
@@ -120,6 +140,21 @@ $(document).ready(() => {
 		$("#announcement").css('visibility', 'visible');
 		setTimeout(() => {
 			$("#announcement").css('visibility', 'hidden');
+		}, time || 1000);
+	}
+
+	// sets is Possible result and reverts after set time
+	function setPossible(valid, time) {
+		if (valid) {
+			$("#is-possible").text("YES");
+			$("#is-possible").addClass("valid-color");
+		} else {
+			$("#is-possible").text("NO");
+			$("#is-possible").addClass("invalid-color");
+		}
+		setTimeout(() => {
+			$("#is-possible").removeClass("invalid-color valid-color");
+			$("#is-possible").text("Is it Possible?");
 		}, time || 1000);
 	}
 
