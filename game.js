@@ -30,24 +30,40 @@ $(document).ready(() => {
 
 		// Show/hide "Test Selected" button based on number of cards selected
 		if (workingSet.length === 3) {
-			$("#check-set-btn").removeClass("disabled");
-			$("#check-set-btn").attr("disabled", false);
+			$("#check-set").removeClass("disabled");
+			$("#check-set").attr("disabled", false);
 		} else {
-			$("#check-set-btn").addClass("disabled");
-			$("#check-set-btn").attr("disabled", true);
+			$("#check-set").addClass("disabled");
+			$("#check-set").attr("disabled", true);
 		}
+	});
+
+	// add 3 new cards to table
+	// disable add cards button
+	$("#add-cards").on("click", (e) => {
+		addCards(3);
+		$("#add-cards").addClass("disabled");
+		$("#add-cards").attr("disabled", true);
+		$("#table").addClass("large-table");
 	});
 
 	// Check if workingSet is correct
 	// announce result
 	// add new cards if necessary
-	$("#check-set-btn").on("click", (e) => {
+	$("#check-set").on("click", (e) => {
 		let result = checkSet([gameDeck.deck[workingSet[0]], gameDeck.deck[workingSet[1]], gameDeck.deck[workingSet[2]]]);
-
 		if (result) {
 			// is a valid set
 			setAnnouncement(true);
-			replaceCards();
+			removeCards();
+			if ($("#table .card").length <= 9) {
+				// Only replace cards if extra 3 weren't added
+				addCards(3);
+			} else {
+				$("#add-cards").removeClass("disabled");
+				$("#add-cards").attr("disabled", false);
+				$("#table").removeClass("large-table");
+			}
 			clearWorkingSet();
 		} else {
 			// not a valid set
@@ -55,17 +71,16 @@ $(document).ready(() => {
 			clearWorkingSet();
 		}
 
-		$("#check-set-btn").addClass("disabled");
-		$("#check-set-btn").attr("disabled", true);
+		$("#check-set").addClass("disabled");
+		$("#check-set").attr("disabled", true);
 	});
 
 	// removes cards in workingSet from table
 	// adds next 3 cards from deck
-	function replaceCards() {
+	function removeCards() {
 		workingSet.forEach(element => {
 			$(`.card[data-cardIndex=${element}]`).remove();
 		});
-		addCards(3);
 	}
 
 	// adds cards to the table

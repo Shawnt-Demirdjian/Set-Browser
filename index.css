@@ -44,6 +44,7 @@ body {
 #title {
 	font-size: 3em;
 	margin: 0px;
+	margin-top: 0.3em;
 }
 
 /* announcement header: Correct! or Wrong! */
@@ -73,13 +74,16 @@ body {
 	max-width: 70em;
 }
 
+.large-table {
+	max-width: 80em !important;
+}
+
 /* Container to hold content of the card */
 .card {
 	display: flex;
 	align-items: center;
 	justify-content: space-evenly;
 	flex-direction: row;
-
 	flex-basis: 15em;
 	flex-shrink: 0;
 
@@ -139,6 +143,7 @@ body {
 	min-width: 40em;
 	max-width: 70em;
 	margin-top: 2em;
+	margin-bottom: 2em;
 }
 
 /* Button to validate selected cards */
@@ -148,7 +153,6 @@ body {
 
 	color: var(--text-color);
 	background-color: var(--bg-color);
-
 	border: solid 2px var(--text-color);
 }
 
