@@ -72,7 +72,7 @@ $(document).ready(() => {
 			let card = gameDeck.deck[gameDeck.nextCardIndex];
 			let cardElement = `<div class="card card-${card.color}" data-cardIndex=${gameDeck.nextCardIndex}>`;
 			for (let i = 0; i < card.number; i++) {
-				cardElement += `<img class="shape" src="/images/${card.shape}/${card.shading}/${card.color}.svg">`;
+				cardElement += `<img class="shape" src="images/${card.shape}/${card.shading}/${card.color}.svg">`;
 			}
 			cardElement += "<div class='card-cover'></div></div>";
 			gameDeck.nextCardIndex++;
