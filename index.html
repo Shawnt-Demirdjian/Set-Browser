@@ -10,11 +10,21 @@
 </head>
 
 <body>
+	<div id="game-board">
+		<!-- Title and Announcements -->
+		<h1 id="title">SET</h1>
+		<h2 id="announcement">SET</h2>
 
-	<h1 id="announcement">SET</h1>
-	<div id="table"></div>
-	<div id="check-set"><button id="check-set-btn">Check Set</button></div>
+		<!-- Table to be filled with cards -->
+		<div id="table"></div>
 
+		<!-- Buttons -->
+		<div id="buttons">
+			<button id="add-cards" class="">Add More Cards</button>
+			<button id="check-set-btn" class="disabled" disabled>Test Selected</button>
+			<button id="is-possible" class="">Is it Possible?</button>
+		</div>
+	</div>
 	<script src="set.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
 		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>

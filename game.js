@@ -28,11 +28,13 @@ $(document).ready(() => {
 			workingSet.splice(selectedIndex, 1);
 		}
 
-		// Show/hide "Check Set" button based on number of cards selected
+		// Show/hide "Test Selected" button based on number of cards selected
 		if (workingSet.length === 3) {
-			$("#check-set").css('visibility', 'visible');
+			$("#check-set-btn").removeClass("disabled");
+			$("#check-set-btn").attr("disabled", false);
 		} else {
-			$("#check-set").css('visibility', 'hidden');
+			$("#check-set-btn").addClass("disabled");
+			$("#check-set-btn").attr("disabled", true);
 		}
 	});
 
@@ -44,16 +46,17 @@ $(document).ready(() => {
 
 		if (result) {
 			// is a valid set
-			setAnnouncement("SET!");
+			setAnnouncement(true);
 			replaceCards();
 			clearWorkingSet();
 		} else {
 			// not a valid set
-			setAnnouncement("Wrong!");
+			setAnnouncement(false);
 			clearWorkingSet();
 		}
 
-		$("#check-set").css('visibility', 'hidden');
+		$("#check-set-btn").addClass("disabled");
+		$("#check-set-btn").attr("disabled", true);
 	});
 
 	// removes cards in workingSet from table
@@ -89,8 +92,16 @@ $(document).ready(() => {
 	}
 
 	// sets announcement header and makes visible for set time
-	function setAnnouncement(text, time) {
-		$("#announcement").text(text);
+	function setAnnouncement(valid, time) {
+		if (valid) {
+			$("#announcement").addClass('valid-color');
+			$("#announcement").removeClass('invalid-color');
+			$("#announcement").text("Correct!");
+		} else {
+			$("#announcement").addClass('invalid-color');
+			$("#announcement").removeClass('valid-color');
+			$("#announcement").text("Wrong!");
+		}
 		$("#announcement").css('visibility', 'visible');
 		setTimeout(() => {
 			$("#announcement").css('visibility', 'hidden');

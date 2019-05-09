@@ -1,15 +1,68 @@
+:root {
+	--bg-color: rgb(26, 26, 26);
+	--text-color: rgb(255, 255, 255);
+
+	--purple: rgb(128, 81, 164);
+	--red: rgb(234, 28, 45);
+	--green: rgb(0, 169, 80);
+
+	--card-hover: rgba(90, 90, 90, 0.226);
+	--card-select: rgb(255, 215, 0);
+}
+
+html {
+	height: 100%;
+}
+
 body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
 
-	height: 100vh;
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	user-select: none;
 
-	background-color: rgb(26, 26, 26);
-	color: white;
+	overflow: auto;
+	min-height: 100%;
+	min-width: 600px;
+	margin: 0;
 }
 
+/* Container for everything */
+#game-board {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+
+	height: 100%;
+}
+
+/* Page Title */
+#title {
+	font-size: 3em;
+	margin: 0px;
+}
+
+/* announcement header: Correct! or Wrong! */
+#announcement {
+	visibility: hidden;
+	font-style: italic;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.valid-color {
+	color: var(--green);
+}
+
+.invalid-color {
+	color: var(--red);
+}
+
+/* Container to hold all cards */
 #table {
 	display: flex;
 	flex-direction: row;
@@ -17,74 +70,102 @@ body {
 	align-items: center;
 	justify-content: center;
 
-	/* width: 75vw; */
+	max-width: 70em;
 }
 
+/* Container to hold content of the card */
 .card {
 	display: flex;
 	align-items: center;
 	justify-content: space-evenly;
 	flex-direction: row;
 
+	flex-basis: 15em;
+	flex-shrink: 0;
 
 	border-width: 2px;
 	border-style: solid;
 
-	padding: 10px;
-	height: 150px;
-	width: 200px;
+	height: 7em;
 	margin: 5px;
+	min-width: 3em;
 
 	position: relative;
 }
 
 .card:hover {
-	background-color: rgba(255, 255, 255, 0.171);
+	background-color: var(--card-hover);
 	cursor: pointer;
 }
 
+/* Styling for a selected card */
 .card-active {
-	background-color: rgba(255, 255, 255, 0.521);
+	border-color: var(--card-select) !important;
 }
 
-.card-active:hover {
-	background-color: rgba(255, 255, 255, 0.521);
-}
-
+/* Coloring for Cards */
 .card-GREEN {
-	border-color: #00a950;
+	border-color: var(--green);
 }
 
 .card-RED {
-	border-color: #ea1c2d;
+	border-color: var(--red);
 }
 
 .card-PURPLE {
-	border-color: #8051a4;
+	border-color: var(--purple);
 }
 
-#check-set {
-	visibility: hidden;
-
-	margin-top: 40px;
-}
-
-#check-set-btn {
-	height: 20px;
-	width: 100px;
-}
-
-#announcement {
-	visibility: hidden;
-
-}
-
+/* images for shape SVGs */
 .shape {
-	height: 100px;
+	height: 90%;
 }
 
+/* Click event catcher  */
 .card-cover {
 	position: absolute;
 	height: 100%;
 	width: 100%;
+}
+
+/* Row of Buttons */
+#buttons {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-evenly;
+
+	min-width: 40em;
+	max-width: 70em;
+	margin-top: 2em;
+}
+
+/* Button to validate selected cards */
+#buttons button {
+	font-size: 1.3em;
+	padding: 0.7em;
+
+	color: var(--text-color);
+	background-color: var(--bg-color);
+
+	border: solid 2px var(--text-color);
+}
+
+#buttons button:hover {
+	background-color: var(--card-hover);
+	cursor: pointer;
+}
+
+#buttons button:focus {
+	outline: none;
+}
+
+#buttons button:active {
+	border-color: var(--card-select) !important;
+}
+
+/* Disabled buttons */
+.disabled {
+	filter: opacity(30%);
 }
