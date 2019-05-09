@@ -17,13 +17,11 @@ SET is a puzzle, competitive card game. You can see the rules [here](https://www
   - Timer once SET is "called"
   - Arbitrary number of players
   - One player is a 'practice' mode
-- Design for cards
-  - Colors
-  - Shapes
-    - SVGs most likely
-  - Number
-  - Shading
-    - Property of SVGs
+- Design
+  - Scalability
+  - Buttons
+  - Titles
+  - Announcements
 - Help
   - Shuffle cards on table
   - Add 3 cards to table (max 15)
