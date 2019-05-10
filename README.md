@@ -14,10 +14,14 @@ SET is a puzzle, competitive card game. You can see the rules [here](https://www
 
 ## Planned Features
 
-- Start over/play again functionality
 - Competitive Play with score keeping
   - Timer once SET is "called"
+  - Display and track scores
   - Up to 4 players
   - One player is a 'practice' mode
+- Design
+  - Light/Dark Themes
+  - Animations
 - Help
   - Shuffle cards on table
+  - Show Answer (Give Up)
