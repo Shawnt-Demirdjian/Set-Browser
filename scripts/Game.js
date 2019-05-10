@@ -76,13 +76,13 @@ class Game {
 
 	// Generates all combinations of cards on table
 	// tests until we hit a working combination or finish
-	// returns true if there exists a SET, false otherwise
+	// returns valid SET if there exists a SET, false otherwise
 	isPossible() {
 		let allCombinations = Combinatorics.combination(this.table, 3);
 		let currentCombo = [];
 		while (currentCombo = allCombinations.next()) {
 			if (Card.checkArbitrarySet([this.gameDeck.deck[currentCombo[0]], this.gameDeck.deck[currentCombo[1]], this.gameDeck.deck[currentCombo[2]]])) {
-				return true;
+				return currentCombo;
 			}
 		}
 		return false;
@@ -91,7 +91,7 @@ class Game {
 	// returns true if game should end
 	testEndgame() {
 		// game ends if the deck is empty and there are no possible SETs
-		return (!this.gameDeck.hasNext() && !this.isPossible())
+		return (!this.gameDeck.hasNext() && this.isPossible() === false)
 	}
 
 	// shuffles the table array

@@ -77,7 +77,12 @@ $(document).ready(() => {
 	// "Is it Possible?" Button
 	// announce result
 	$("#is-possible").on("click", (e) => {
-		setPossible(game.isPossible());
+		// isPossible returns array on success
+		if (game.isPossible() === false) {
+			setPossible(false);
+		} else {
+			setPossible(true);
+		}
 	});
 
 	// Clicking on Cards
@@ -146,6 +151,25 @@ $(document).ready(() => {
 		// reorder Board
 		newOrder.forEach((newIndex) => {
 			$("#table").append($(`.card[data-cardIndex=${newIndex}]`));
+		});
+	});
+
+	// "Give Up" button
+	// Auto select a valid SET
+	// Add more cards if necessary
+	$("#give-up").on("click", () => {
+		let validSet = game.isPossible();
+		if (validSet === false) {
+			// there was no valid SET
+			// add more cards and try again
+			$("#add-cards").trigger("click");
+			validSet = game.isPossible();
+		}
+
+		// select the SET
+		validSet.forEach((index) => {
+			console.log($(`.card[data-cardIndex=${index}]`))
+			$(`.card[data-cardIndex=${index}]`).children(".card-cover").trigger("click");
 		});
 	});
 
