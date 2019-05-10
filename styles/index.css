@@ -171,8 +171,46 @@ body {
 	background-color: var(--card-active) !important;
 }
 
+/* Endgame Modal */
+
+#endgame-background {
+	height: 100vh;
+	width: 100vw;
+	position: absolute;
+
+	background-color: rgba(0, 0, 0, 0.568);
+	text-align: center;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#endgame-modal {
+	background-color: var(--bg-color);
+	border: var(--card-select) solid 2px;
+	padding: 1em 2em;
+}
+
+#score-board {
+	margin: auto;
+	margin-bottom: 1em;
+	border-collapse: collapse;
+}
+
+.score {
+	font-size: 1.3em;
+}
+
+.score * {
+	padding: 8px;
+	border: var(--text-color) solid 2px;
+	text-align: right;
+}
+
 /* Constant Menu */
 #constant-menu {
+	z-index: 10;
 	position: absolute;
 	top: 0;
 	right: 0;

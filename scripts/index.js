@@ -9,7 +9,7 @@ $(document).ready(() => {
 	// Starts game with X amount of players (1 for now)
 	$(".start-btn").on("click", (e) => {
 		// generate new game with requested players (1 for now)
-		game = new Game($(e.target).attr("data-playerCount"));
+		game = new Game($(e.target).attr("data-playerCount"), ['q', 'c', 'n', 'p'], endgame);
 		// start the game and fill the table
 		renderCardsToTable(game.startGame());
 
@@ -24,11 +24,15 @@ $(document).ready(() => {
 	// disable add cards button
 	$("#add-cards").on("click", (e) => {
 		if (game.gameDeck.hasNext() && game.table.length <= 12) {
-			renderCardsToTable(game.addCardsToTable(3));
+			let newlyAdded = game.addCardsToTable(3);
+			renderCardsToTable(newlyAdded);
+			$("#add-cards").addClass("disabled");
+			$("#add-cards").attr("disabled", true);
+			$("#table").addClass("large-table");
+			if (game.testEndgame()) {
+				endgame();
+			}
 		}
-		$("#add-cards").addClass("disabled");
-		$("#add-cards").attr("disabled", true);
-		$("#table").addClass("large-table");
 	});
 
 	// "Test Selected" Button
@@ -42,14 +46,21 @@ $(document).ready(() => {
 			// is a valid set
 			setAnnouncement(true);
 			removeCards();
-			if ($("#table .card").length <= 9) {
+			if (game.table.length <= 9) {
 				// Only replace cards if extra 3 weren't added
-				renderCardsToTable(game.addCardsToTable(3));
-			} else {
+				let newlyAdded = game.addCardsToTable(3);
+				renderCardsToTable(newlyAdded);
+			}
+			if (game.gameDeck.hasNext()) {
+				// re-enable "Add More Cards" if there are more to add
 				$("#add-cards").removeClass("disabled");
 				$("#add-cards").attr("disabled", false);
-				$("#table").removeClass("large-table");
+			} else {
+				// disable "Add More Cards"
+				$("#add-cards").addClass("disabled");
+				$("#add-cards").attr("disabled", true);
 			}
+			$("#table").removeClass("large-table");
 			clearWorkingSet();
 		} else {
 			// not a valid set
@@ -58,6 +69,9 @@ $(document).ready(() => {
 		}
 		$("#check-set").addClass("disabled");
 		$("#check-set").attr("disabled", true);
+		if (game.testEndgame()) {
+			endgame();
+		}
 	});
 
 	// "Is it Possible?" Button
@@ -99,10 +113,13 @@ $(document).ready(() => {
 
 	// "X constant button"
 	// cancel game and revert to main menu
-	$("#exit").on("click", () => {
+	$(".exit").on("click", () => {
 		// reset table
 		$("#table").empty();
 		$("#table").removeClass("large-table");
+
+		// reset score board
+		$("#score-board").empty();
 
 		// reset game buttons
 		$("#check-set").addClass("disabled");
@@ -113,11 +130,11 @@ $(document).ready(() => {
 		// reset game
 		game = null;
 
-		// Hide game, show menu
+		// Hide game, hide endgame, show menu
 		$("#table").addClass("display-none");
 		$("#game-buttons").addClass("display-none");
 		$("#main-menu").removeClass("display-none");
-
+		$("#endgame-background").addClass("display-none");
 	});
 
 	/* ----------FUNCTIONS---------- */
@@ -180,6 +197,21 @@ $(document).ready(() => {
 			$("#is-possible").removeClass("invalid-color valid-color");
 			$("#is-possible").text("Is it Possible?");
 		}, time || 1000);
+	}
+
+	// Stop game and display Endgame Modal 
+	// game ends if the deck is empty and there are no possible SETs
+	function endgame() {
+		for (let playerIndex = 0; playerIndex < game.playerCount; playerIndex++) {
+			$("#score-board").append(
+				`<tr class="score">
+					<td>Player ${playerIndex}</td>
+					<td>${game.playerScores[playerIndex]} Points</td>
+				</tr>`
+			);
+		}
+		// show Endgame Modal
+		$("#endgame-background").removeClass("display-none");
 	}
 
 }); // end document.ready

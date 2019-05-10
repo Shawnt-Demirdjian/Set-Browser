@@ -37,7 +37,19 @@
 	<!-- Constant Menu -->
 	<div id="constant-menu">
 		<span id="theme-switch" class="constant-btn disabled">&#9728;</span>
-		<span id="exit" class="invalid-color constant-btn">&#x2716;</span>
+		<span class="exit invalid-color constant-btn">&#x2716;</span>
+	</div>
+
+	<!-- Endgame Modal -->
+	<div id="endgame-background" class="display-none">
+		<div id="endgame-modal">
+			<h1>Game Over</h1>
+			<hr>
+			<h2>Scores:</h2>
+			<table id="score-board">
+			</table>
+			<button class="exit button">Done</button>
+		</div>
 	</div>
 
 	<script src="dependencies/js-combinatorics/combinatorics.js"></script>

@@ -2,7 +2,7 @@
 class Game {
 	constructor(playerCount, keys) {
 		this.playerCount = playerCount || 1; // defaults to single player
-		this.playerKeys = keys || ['q', 'c', 'n', 'p']; // the keys that belong to each player in order
+		this.playerKeys = keys; // the keys that belong to each player in order
 		this.playerScores = [0, 0, 0, 0]; // player scores in order
 		this.gameDeck = new Deck();
 		this.workingSet = []; // the currently selected set (index only)
@@ -12,6 +12,7 @@ class Game {
 	/* ------INSTANCE METHODS------ */
 
 	// returns true if the cards in workingSet are a valid Set, false otherwise
+	// remove cards from table if valid
 	// rules of what makes a set: https://www.setgame.com/sites/default/files/instructions/SET%20INSTRUCTIONS%20-%20ENGLISH.pdf
 	checkSet() {
 		// check number of cards
@@ -38,6 +39,10 @@ class Game {
 						(cards[0].shading !== cards[1].shading && cards[1].shading !== cards[2].shading && cards[0].shading !== cards[2].shading)) {
 						// shading passes
 						// all tests pass, this is a set.
+						// remove the working set from table
+						this.table.splice(this.table.indexOf(parseInt(this.workingSet[0])), 1);
+						this.table.splice(this.table.indexOf(parseInt(this.workingSet[1])), 1);
+						this.table.splice(this.table.indexOf(parseInt(this.workingSet[2])), 1);
 						return true;
 					}
 				}
@@ -56,6 +61,7 @@ class Game {
 
 	// adds n cards to table, if they are available
 	// returns array of n objects that contain a card and their index that were just added to table
+	// returns empty array on endgame
 	addCardsToTable(n) {
 		let newAdditions = [];
 		for (let i = 0; i < n && this.gameDeck.hasNext(); i++) {
@@ -82,4 +88,9 @@ class Game {
 		return false;
 	}
 
+	// returns true if game should end
+	testEndgame() {
+		// game ends if the deck is empty and there are no possible SETs
+		return (!this.gameDeck.hasNext() && !this.isPossible())
+	}
 }
