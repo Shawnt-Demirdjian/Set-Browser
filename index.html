@@ -16,15 +16,30 @@
 		<h2 id="announcement">SET</h2>
 
 		<!-- Table to be filled with cards -->
-		<div id="table"></div>
+		<div id="table" class="display-none"></div>
 
-		<!-- Buttons -->
-		<div id="buttons">
-			<button id="add-cards" class="">Add More Cards</button>
-			<button id="check-set" class="disabled" disabled>Test Selected</button>
-			<button id="is-possible" class="">Is it Possible?</button>
+		<!-- Game Buttons -->
+		<div id="game-buttons" class="display-none">
+			<button id="add-cards" class="button">Add More Cards</button>
+			<button id="check-set" class="button disabled" disabled>Test Selected</button>
+			<button id="is-possible" class="button">Is it Possible?</button>
+		</div>
+
+		<!-- Main Menu -->
+		<div id="main-menu">
+			<button data-playerCount="1" class="start-btn button">One Player</button>
+			<button data-playerCount="2" class="start-btn button disabled" disabled>Two Player</button>
+			<button data-playerCount="3" class="start-btn button disabled" disabled>Three Player</button>
+			<button data-playerCount="4" class="start-btn button disabled" disabled>Four Player</button>
 		</div>
 	</div>
+
+	<!-- Constant Menu -->
+	<div id="constant-menu">
+		<span id="theme-switch" class="constant-btn disabled">&#9728;</span>
+		<span id="exit" class="invalid-color constant-btn">&#x2716;</span>
+	</div>
+
 	<script src="dependencies/js-combinatorics/combinatorics.js"></script>
 	<script src="dependencies/jquery/dist/jquery.slim.min.js"></script>
 	<script src="scripts/def.js"></script>

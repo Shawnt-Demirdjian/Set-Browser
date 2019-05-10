@@ -7,6 +7,7 @@
 	--green: rgb(0, 169, 80);
 
 	--card-hover: rgba(90, 90, 90, 0.226);
+	--card-active: rgba(90, 90, 90, 0.486);
 	--card-select: rgb(255, 215, 0);
 }
 
@@ -132,8 +133,8 @@ body {
 	width: 100%;
 }
 
-/* Row of Buttons */
-#buttons {
+/* Row of Game Buttons */
+#game-buttons {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
@@ -147,7 +148,7 @@ body {
 }
 
 /* Button to validate selected cards */
-#buttons button {
+.button {
 	font-size: 1.3em;
 	padding: 0.7em;
 	width: 9em;
@@ -157,20 +158,57 @@ body {
 	border: solid 2px var(--text-color);
 }
 
-#buttons button:hover {
+.button:hover {
 	background-color: var(--card-hover);
 	cursor: pointer;
 }
 
-#buttons button:focus {
+.button:focus {
 	outline: none;
 }
 
-#buttons button:active {
-	border-color: var(--card-select) !important;
+.button:active {
+	background-color: var(--card-active) !important;
+}
+
+/* Constant Menu */
+#constant-menu {
+	position: absolute;
+	top: 0;
+	right: 0;
+
+	margin-top: 1em;
+	margin-right: 1em;
+}
+
+.constant-btn {
+	margin: 0;
+	padding: 3px 5px;
+	font-size: 2em;
+	text-align: center;
+}
+
+.constant-btn:hover {
+	cursor: pointer;
+	background-color: var(--card-hover);
+}
+
+.constant-btn:active {
+	background-color: var(--card-active);
 }
 
 /* Disabled buttons */
 .disabled {
 	filter: opacity(30%);
+}
+
+.disabled:hover {
+	background-color: initial;
+	cursor: unset;
+}
+
+/* Utilities */
+
+.display-none {
+	display: none !important;
 }

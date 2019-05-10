@@ -1,11 +1,23 @@
 $(document).ready(() => {
 
-	// generate a new game (single player for now)
-	let game = new Game();
-	// start the game and fill the table
-	renderCardsToTable(game.startGame());
+	// game reference
+	let game;
 
 	/* ------------EVENTS------------ */
+
+	// "X Player" Buttons
+	// Starts game with X amount of players (1 for now)
+	$(".start-btn").on("click", (e) => {
+		// generate new game with requested players (1 for now)
+		game = new Game($(e.target).attr("data-playerCount"));
+		// start the game and fill the table
+		renderCardsToTable(game.startGame());
+
+		// Hide menu, show game
+		$("#main-menu").addClass("display-none");
+		$("#table").removeClass("display-none");
+		$("#game-buttons").removeClass("display-none");
+	});
 
 	// "Add More Cards" button
 	// add 3 new cards to table if available
@@ -83,6 +95,29 @@ $(document).ready(() => {
 			$("#check-set").addClass("disabled");
 			$("#check-set").attr("disabled", true);
 		}
+	});
+
+	// "X constant button"
+	// cancel game and revert to main menu
+	$("#exit").on("click", () => {
+		// reset table
+		$("#table").empty();
+		$("#table").removeClass("large-table");
+
+		// reset game buttons
+		$("#check-set").addClass("disabled");
+		$("#check-set").attr("disabled", true);
+		$("#add-cards").removeClass("disabled");
+		$("#add-cards").attr("disabled", false);
+
+		// reset game
+		game = null;
+
+		// Hide game, show menu
+		$("#table").addClass("display-none");
+		$("#game-buttons").addClass("display-none");
+		$("#main-menu").removeClass("display-none");
+
 	});
 
 	/* ----------FUNCTIONS---------- */
