@@ -93,4 +93,10 @@ class Game {
 		// game ends if the deck is empty and there are no possible SETs
 		return (!this.gameDeck.hasNext() && !this.isPossible())
 	}
+
+	// shuffles the table array
+	// returns the newly shuffled array
+	shuffleTable() {
+		return Deck.shufflePartialDeck(this.table);
+	}
 }

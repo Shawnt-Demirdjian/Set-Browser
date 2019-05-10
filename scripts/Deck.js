@@ -52,4 +52,14 @@ class Deck {
 		// return the newly generated deck
 		return newDeck;
 	}
+
+	// shuffles an arbitrary array
+	// returns the newly shuffled array
+	static shufflePartialDeck(partialDeck) {
+		for (let i = partialDeck.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[partialDeck[i], partialDeck[j]] = [partialDeck[j], partialDeck[i]];
+		}
+		return partialDeck;
+	}
 }

@@ -27,7 +27,6 @@ body {
 
 	overflow: auto;
 	min-height: 100%;
-	min-width: 600px;
 	margin: 0;
 }
 
@@ -134,23 +133,22 @@ body {
 }
 
 /* Row of Game Buttons */
-#game-buttons {
+#game-buttons,
+#main-menu {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
 	align-items: center;
 	justify-content: space-evenly;
 
-	min-width: 40em;
-	max-width: 70em;
-	margin-top: 2em;
-	margin-bottom: 2em;
+	margin: 1em 0px;
 }
 
 /* Button to validate selected cards */
 .button {
 	font-size: 1.3em;
 	padding: 0.7em;
+	margin: 0.5em 0em;
 	width: 9em;
 
 	color: var(--text-color);

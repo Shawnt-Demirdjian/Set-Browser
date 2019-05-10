@@ -137,6 +137,18 @@ $(document).ready(() => {
 		$("#endgame-background").addClass("display-none");
 	});
 
+	// "Shuffle" Button
+	// Reorder the cards on the table
+	$("#shuffle-table").on("click", () => {
+		// shuffle table
+		let newOrder = game.shuffleTable();
+
+		// reorder Board
+		newOrder.forEach((newIndex) => {
+			$("#table").append($(`.card[data-cardIndex=${newIndex}]`));
+		});
+	});
+
 	/* ----------FUNCTIONS---------- */
 
 	// renders an array of cards to the table
