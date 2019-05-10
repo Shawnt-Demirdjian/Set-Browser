@@ -23,5 +23,8 @@ SET is a puzzle, competitive card game. You can see the rules [here](https://www
   - Light/Dark Themes
   - Animations
 - Help
-  - Shuffle cards on table
   - Show Answer (Give Up)
+- Settings
+  - Toggle Auto Add if not possible
+  - Limit shuffle number
+  - Limit add more cards
