@@ -1,161 +1,85 @@
-$(document).ready(() => {
+// Holds all information for a single game and its current state
+class Game {
+	constructor(playerCount, keys) {
+		this.playerCount = playerCount || 1; // defaults to single player
+		this.playerKeys = keys || ['q', 'c', 'n', 'p']; // the keys that belong to each player in order
+		this.playerScores = [0, 0, 0, 0]; // player scores in order
+		this.gameDeck = new Deck();
+		this.workingSet = []; // the currently selected set (index only)
+		this.table = []; // the cards currently on the table (index only)
+	}
 
-	// generate a new deck
-	let gameDeck = new Deck();
-	let workingSet = [];
+	/* ------INSTANCE METHODS------ */
 
-	// Display first 12 cards
-	addCards(12);
-
-	// clicking on cards
-	// toggle active styling and add to workingSet
-	// max of three selected
-	$("#table").on("click", ".card-cover", (e) => {
-		let targetCard = $(e.target).parent(".card");
-		// get the index of the card the selected
-		let selectedCardIndex = targetCard.attr("data-cardIndex");
-		// get the index of the card in the workingSet (if selected already)
-		let selectedIndex = workingSet.indexOf(selectedCardIndex);
-		if (selectedIndex === -1 && workingSet.length !== 3) {
-			// select
-			// make active and push onto workingSet
-			targetCard.addClass("card-active");
-			workingSet.push(selectedCardIndex);
-		} else if (selectedIndex !== -1) {
-			// deselect
-			// remove active and remove from workingSet
-			targetCard.removeClass("card-active");
-			workingSet.splice(selectedIndex, 1);
+	// returns true if the cards in workingSet are a valid Set, false otherwise
+	// rules of what makes a set: https://www.setgame.com/sites/default/files/instructions/SET%20INSTRUCTIONS%20-%20ENGLISH.pdf
+	checkSet() {
+		// check number of cards
+		if (this.workingSet.length !== 3) {
+			return false;
 		}
+		// get the 3 cards to be compared
+		let cards = [
+			this.gameDeck.deck[this.workingSet[0]],
+			this.gameDeck.deck[this.workingSet[1]],
+			this.gameDeck.deck[this.workingSet[2]]
+		];
 
-		// Show/hide "Test Selected" button based on number of cards selected
-		if (workingSet.length === 3) {
-			$("#check-set").removeClass("disabled");
-			$("#check-set").attr("disabled", false);
-		} else {
-			$("#check-set").addClass("disabled");
-			$("#check-set").attr("disabled", true);
-		}
-	});
-
-	// add 3 new cards to table
-	// disable add cards button
-	$("#add-cards").on("click", (e) => {
-		addCards(3);
-		$("#add-cards").addClass("disabled");
-		$("#add-cards").attr("disabled", true);
-		$("#table").addClass("large-table");
-	});
-
-	// Check if workingSet is correct
-	// announce result
-	// add new cards if necessary
-	$("#check-set").on("click", (e) => {
-		let result = checkSet([gameDeck.deck[workingSet[0]], gameDeck.deck[workingSet[1]], gameDeck.deck[workingSet[2]]]);
-		if (result) {
-			// is a valid set
-			setAnnouncement(true);
-			removeCards();
-			if ($("#table .card").length <= 9) {
-				// Only replace cards if extra 3 weren't added
-				addCards(3);
-			} else {
-				$("#add-cards").removeClass("disabled");
-				$("#add-cards").attr("disabled", false);
-				$("#table").removeClass("large-table");
+		if ((cards[0].number === cards[1].number && cards[1].number === cards[2].number) ||
+			(cards[0].number !== cards[1].number && cards[1].number !== cards[2].number && cards[0].number !== cards[2].number)) {
+			// number passes
+			if ((cards[0].color === cards[1].color && cards[1].color === cards[2].color) ||
+				(cards[0].color !== cards[1].color && cards[1].color !== cards[2].color && cards[0].color !== cards[2].color)) {
+				// color passes
+				if ((cards[0].shape === cards[1].shape && cards[1].shape === cards[2].shape) ||
+					(cards[0].shape !== cards[1].shape && cards[1].shape !== cards[2].shape && cards[0].shape !== cards[2].shape)) {
+					// shape passes
+					if ((cards[0].shading === cards[1].shading && cards[1].shading === cards[2].shading) ||
+						(cards[0].shading !== cards[1].shading && cards[1].shading !== cards[2].shading && cards[0].shading !== cards[2].shading)) {
+						// shading passes
+						// all tests pass, this is a set.
+						return true;
+					}
+				}
 			}
-			clearWorkingSet();
-		} else {
-			// not a valid set
-			setAnnouncement(false);
-			clearWorkingSet();
 		}
+		// some test failed
+		return false;
+	}
 
-		$("#check-set").addClass("disabled");
-		$("#check-set").attr("disabled", true);
-	});
+	// fills table with first 12 cards
+	startGame() {
+		let startingCards = this.addCardsToTable(12);
+		// TODO: init some player things
+		return startingCards;
+	}
+
+	// adds n cards to table, if they are available
+	// returns array of n objects that contain a card and their index that were just added to table
+	addCardsToTable(n) {
+		let newAdditions = [];
+		for (let i = 0; i < n && this.gameDeck.hasNext(); i++) {
+			newAdditions.push({
+				card: this.gameDeck.next(),
+				index: this.gameDeck.nextCardIndex - 1
+			});
+			this.table.push(this.gameDeck.nextCardIndex - 1);
+		}
+		return newAdditions;
+	}
 
 	// Generates all combinations of cards on table
-	// tests until we hit a working combination
-	// announce result
-	$("#is-possible").on("click", (e) => {
-		let cardsOnTable = $(".card").map((index, element) => {
-			return $(element).attr("data-cardIndex")
-		}).get();
-		allCombinations = Combinatorics.combination(cardsOnTable, 3);
+	// tests until we hit a working combination or finish
+	// returns true if there exists a SET, false otherwise
+	isPossible() {
+		let allCombinations = Combinatorics.combination(this.table, 3);
 		let currentCombo = [];
 		while (currentCombo = allCombinations.next()) {
-			if (checkSet([gameDeck.deck[currentCombo[0]], gameDeck.deck[currentCombo[1]], gameDeck.deck[currentCombo[2]]])) {
-				setPossible(true);
-				break;
+			if (Card.checkArbitrarySet([this.gameDeck.deck[currentCombo[0]], this.gameDeck.deck[currentCombo[1]], this.gameDeck.deck[currentCombo[2]]])) {
+				return true;
 			}
 		}
-		if (typeof allCombinations.next() == "undefined") {
-			setPossible(false);
-		}
-	});
-
-	// removes cards in workingSet from table
-	// adds next 3 cards from deck
-	function removeCards() {
-		workingSet.forEach(element => {
-			$(`.card[data-cardIndex=${element}]`).remove();
-		});
+		return false;
 	}
 
-	// adds cards to the table
-	// defaults to 1 card
-	function addCards(number) {
-		for (let i = 0; i < number; i++) {
-			let card = gameDeck.deck[gameDeck.nextCardIndex];
-			let cardElement = `<div class="card card-${card.color}" data-cardIndex=${gameDeck.nextCardIndex}>`;
-			for (let i = 0; i < card.number; i++) {
-				cardElement += `<img class="shape" src="images/${card.shape}/${card.shading}/${card.color}.svg">`;
-			}
-			cardElement += "<div class='card-cover'></div></div>";
-			gameDeck.nextCardIndex++;
-			$("#table").append(cardElement);
-		}
-	}
-
-	// clears the workingSet and deselects all cards
-	function clearWorkingSet() {
-		workingSet.forEach(element => {
-			$(`.card[data-cardIndex=${element}]`).removeClass("card-active");
-		});
-		workingSet.length = 0;
-	}
-
-	// sets announcement header and makes visible for set time
-	function setAnnouncement(valid, time) {
-		if (valid) {
-			$("#announcement").addClass('valid-color');
-			$("#announcement").removeClass('invalid-color');
-			$("#announcement").text("Correct!");
-		} else {
-			$("#announcement").addClass('invalid-color');
-			$("#announcement").removeClass('valid-color');
-			$("#announcement").text("Wrong!");
-		}
-		$("#announcement").css('visibility', 'visible');
-		setTimeout(() => {
-			$("#announcement").css('visibility', 'hidden');
-		}, time || 1000);
-	}
-
-	// sets is Possible result and reverts after set time
-	function setPossible(valid, time) {
-		if (valid) {
-			$("#is-possible").text("YES");
-			$("#is-possible").addClass("valid-color");
-		} else {
-			$("#is-possible").text("NO");
-			$("#is-possible").addClass("invalid-color");
-		}
-		setTimeout(() => {
-			$("#is-possible").removeClass("invalid-color valid-color");
-			$("#is-possible").text("Is it Possible?");
-		}, time || 1000);
-	}
-
-}); // end document.ready
+}
