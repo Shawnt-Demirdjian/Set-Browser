@@ -6,7 +6,7 @@ class Deck {
 		this.shuffleDeck();
 
 		// init tracker for deck iteration
-		this.nextCardIndex = 0;
+		this.nextCardIndex = 66;
 	}
 
 	/* ------INSTANCE METHODS------ */

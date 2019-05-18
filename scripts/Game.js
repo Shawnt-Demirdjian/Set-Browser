@@ -2,8 +2,9 @@
 class Game {
 	constructor(playerCount, keys) {
 		this.playerCount = playerCount || 1; // defaults to single player
-		this.playerKeys = keys; // the keys that belong to each player in order
+		this.playerKeys = keys; // the keyCodes that belong to each player in order
 		this.playerScores = [0, 0, 0, 0]; // player scores in order
+		this.currentPlayer = -1; // playerIndex of player in control. -1 when no one has control
 		this.gameDeck = new Deck();
 		this.workingSet = []; // the currently selected set (index only)
 		this.table = []; // the cards currently on the table (index only)

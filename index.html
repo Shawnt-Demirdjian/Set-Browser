@@ -11,8 +11,31 @@
 
 <body>
 	<div id="game-board">
-		<!-- Title and Announcements -->
-		<h1 id="title">SET</h1>
+		<!-- Title. Timer and Scores -->
+		<div id="top-row">
+			<div class="constant-score">
+				<h2 class="player-name">Player 1</h2>
+				<hr>
+				<h3 class="points">0 Points</h3>
+			</div>
+			<div class="constant-score">
+				<h2 class="player-name">Player 2</h2>
+				<hr>
+				<h3 class="points">0 Points</h3>
+			</div>
+			<h1 id="title">SET</h1>
+			<div class="constant-score">
+				<h2 class="player-name">Player 3</h2>
+				<hr>
+				<h3 class="points">0 Points</h3>
+			</div>
+			<div class="constant-score">
+				<h2 class="player-name">Player 4</h2>
+				<hr>
+				<h3 class="points">0 Points</h3>
+			</div>
+		</div>
+		<!-- Announcements and Timer -->
 		<h2 id="announcement">SET</h2>
 
 		<!-- Table to be filled with cards -->
@@ -30,9 +53,9 @@
 		<!-- Main Menu -->
 		<div id="main-menu">
 			<button data-playerCount="1" class="start-btn button">One Player</button>
-			<button data-playerCount="2" class="start-btn button disabled" disabled>Two Player</button>
-			<button data-playerCount="3" class="start-btn button disabled" disabled>Three Player</button>
-			<button data-playerCount="4" class="start-btn button disabled" disabled>Four Player</button>
+			<button data-playerCount="2" class="start-btn button">Two Player</button>
+			<button data-playerCount="3" class="start-btn button">Three Player</button>
+			<button data-playerCount="4" class="start-btn button">Four Player</button>
 		</div>
 	</div>
 

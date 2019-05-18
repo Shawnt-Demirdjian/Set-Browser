@@ -3,13 +3,40 @@ $(document).ready(() => {
 	// game reference
 	let game;
 
+	// timer reference
+	let timer;
+	let maxTimeout;
+
 	/* ------------EVENTS------------ */
 
 	// "X Player" Buttons
-	// Starts game with X amount of players (1 for now)
+	// Starts game with X amount of players
 	$(".start-btn").on("click", (e) => {
-		// generate new game with requested players (1 for now)
-		game = new Game($(e.target).attr("data-playerCount"), ['q', 'c', 'n', 'p'], endgame);
+		// generate new game with requested players
+		let playerCount = parseInt($(e.target).attr("data-playerCount"));
+		let keys = [];
+		switch (playerCount) {
+			case 1:
+				keys = ["Space"];
+				break;
+			case 2:
+				keys = ["KeyA", "KeyL"];
+				break;
+			case 3:
+				keys = ["KeyQ", "KeyB", "BracketRight"];
+				break;
+			case 4:
+				keys = ["KeyQ", "KeyC", "KeyM", "BracketRight"];
+				break;
+		}
+		game = new Game($(e.target).attr("data-playerCount"), keys);
+
+		if (playerCount > 1) {
+			multiPlayerSetUp();
+		} else {
+			singlePlayerSetUp();
+		}
+
 		// start the game and fill the table
 		renderCardsToTable(game.startGame());
 
@@ -35,45 +62,6 @@ $(document).ready(() => {
 		}
 	});
 
-	// "Test Selected" Button
-	// Check if workingSet is valid,
-	// announce result, add more cards,
-	// enable, "Add More Cards", Disable "Test Selected",
-	// clear workingSet
-	$("#check-set").on("click", (e) => {
-		let result = game.checkSet();
-		if (result) {
-			// is a valid set
-			setAnnouncement(true);
-			removeCards();
-			if (game.table.length <= 9) {
-				// Only replace cards if extra 3 weren't added
-				let newlyAdded = game.addCardsToTable(3);
-				renderCardsToTable(newlyAdded);
-			}
-			if (game.gameDeck.hasNext()) {
-				// re-enable "Add More Cards" if there are more to add
-				$("#add-cards").removeClass("disabled");
-				$("#add-cards").attr("disabled", false);
-			} else {
-				// disable "Add More Cards"
-				$("#add-cards").addClass("disabled");
-				$("#add-cards").attr("disabled", true);
-			}
-			$("#table").removeClass("large-table");
-			clearWorkingSet();
-		} else {
-			// not a valid set
-			setAnnouncement(false);
-			clearWorkingSet();
-		}
-		$("#check-set").addClass("disabled");
-		$("#check-set").attr("disabled", true);
-		if (game.testEndgame()) {
-			endgame();
-		}
-	});
-
 	// "Is it Possible?" Button
 	// announce result
 	$("#is-possible").on("click", (e) => {
@@ -82,37 +70,6 @@ $(document).ready(() => {
 			setPossible(false);
 		} else {
 			setPossible(true);
-		}
-	});
-
-	// Clicking on Cards
-	// toggle active styling and add to workingSet
-	// max of three selected
-	$("#table").on("click", ".card-cover", (e) => {
-		let targetCard = $(e.target).parent(".card");
-		// get the index of the card the selected
-		let selectedCardIndex = targetCard.attr("data-cardIndex");
-		// get the index of the card in the workingSet (if selected already)
-		let selectedIndex = game.workingSet.indexOf(selectedCardIndex);
-		if (selectedIndex === -1 && game.workingSet.length !== 3) {
-			// select
-			// make active and push onto workingSet
-			targetCard.addClass("card-active");
-			game.workingSet.push(selectedCardIndex);
-		} else if (selectedIndex !== -1) {
-			// deselect
-			// remove active and remove from workingSet
-			targetCard.removeClass("card-active");
-			game.workingSet.splice(selectedIndex, 1);
-		}
-
-		// Show/hide "Test Selected" button based on number of cards selected
-		if (game.workingSet.length === 3) {
-			$("#check-set").removeClass("disabled");
-			$("#check-set").attr("disabled", false);
-		} else {
-			$("#check-set").addClass("disabled");
-			$("#check-set").attr("disabled", true);
 		}
 	});
 
@@ -132,14 +89,19 @@ $(document).ready(() => {
 		$("#add-cards").removeClass("disabled");
 		$("#add-cards").attr("disabled", false);
 
+		// reset card click event
+		$("#table").off("click", ".card-cover");
+
 		// reset game
 		game = null;
 
-		// Hide game, hide endgame, show menu
+		// Hide game, hide endgame, hide and reset player scores, show menu
 		$("#table").addClass("display-none");
 		$("#game-buttons").addClass("display-none");
 		$("#main-menu").removeClass("display-none");
 		$("#endgame-background").addClass("display-none");
+		$(".constant-score").css('visibility', 'hidden');
+		$(".points").text("0 Points");
 	});
 
 	// "Shuffle" Button
@@ -168,12 +130,207 @@ $(document).ready(() => {
 
 		// select the SET
 		validSet.forEach((index) => {
-			console.log($(`.card[data-cardIndex=${index}]`))
 			$(`.card[data-cardIndex=${index}]`).children(".card-cover").trigger("click");
 		});
 	});
 
-	/* ----------FUNCTIONS---------- */
+	/* ----------EVENT FUNCTIONS---------- */
+
+	// "Test Selected" Button for Single Player
+	// Check if workingSet is valid,
+	// announce result, add more cards,
+	// enable, "Add More Cards", Disable "Test Selected",
+	// clear workingSet
+	function singlePlayerCheckSet(e) {
+		let result = game.checkSet();
+		if (result) {
+			// is a valid set
+			setAnnouncement("Correct!", true);
+			removeCards();
+			if (game.table.length <= 9) {
+				// Only replace cards if extra 3 weren't added
+				let newlyAdded = game.addCardsToTable(3);
+				renderCardsToTable(newlyAdded);
+			}
+			if (game.gameDeck.hasNext()) {
+				// re-enable "Add More Cards" if there are more to add
+				$("#add-cards").removeClass("disabled");
+				$("#add-cards").attr("disabled", false);
+			} else {
+				// disable "Add More Cards"
+				$("#add-cards").addClass("disabled");
+				$("#add-cards").attr("disabled", true);
+			}
+			$("#table").removeClass("large-table");
+			clearWorkingSet();
+		} else {
+			// not a valid set
+			setAnnouncement("Wrong!", false);
+			clearWorkingSet();
+		}
+		$("#check-set").addClass("disabled");
+		$("#check-set").attr("disabled", true);
+		if (game.testEndgame()) {
+			endgame();
+		}
+	}
+
+	function multiPlayerCheckSet(e) {
+		let result = game.checkSet();
+		clearSet();
+		if (result) {
+			// increment player score
+			game.playerScores[game.currentPlayer]++;
+			// is a valid set
+			setAnnouncement("Correct!", true);
+			removeCards();
+			if (game.table.length <= 9) {
+				// Only replace cards if extra 3 weren't added
+				let newlyAdded = game.addCardsToTable(3);
+				renderCardsToTable(newlyAdded);
+			}
+			if (game.gameDeck.hasNext()) {
+				// re-enable "Add More Cards" if there are more to add
+				$("#add-cards").removeClass("disabled");
+				$("#add-cards").attr("disabled", false);
+			} else {
+				// disable "Add More Cards"
+				$("#add-cards").addClass("disabled");
+				$("#add-cards").attr("disabled", true);
+			}
+			$("#table").removeClass("large-table");
+			clearWorkingSet();
+		} else {
+			// decrement player score
+			game.playerScores[game.currentPlayer]--;
+			// not a valid set
+			setAnnouncement("Wrong!", false);
+			clearWorkingSet();
+		}
+		updateScore(game.currentPlayer);
+		// reset current player
+		game.currentPlayer = -1;
+		$("#check-set").addClass("disabled");
+		$("#check-set").attr("disabled", true);
+		if (game.testEndgame()) {
+			endgame();
+		}
+	}
+
+	// Clicking on Cards for Single Player
+	// toggle active styling and add to workingSet
+	// max of three selected
+	function cardClick(e) {
+		let targetCard = $(e.target).parent(".card");
+		// get the index of the card the selected
+		let selectedCardIndex = targetCard.attr("data-cardIndex");
+		// get the index of the card in the workingSet (if selected already)
+		let selectedIndex = game.workingSet.indexOf(selectedCardIndex);
+		if (selectedIndex === -1 && game.workingSet.length !== 3) {
+			// select
+			// make active and push onto workingSet
+			targetCard.addClass("card-active");
+			game.workingSet.push(selectedCardIndex);
+		} else if (selectedIndex !== -1) {
+			// deselect
+			// remove active and remove from workingSet
+			targetCard.removeClass("card-active");
+			game.workingSet.splice(selectedIndex, 1);
+		}
+
+		// Show/hide "Test Selected" button based on number of cards selected
+		if (game.workingSet.length === 3) {
+			$("#check-set").removeClass("disabled");
+			$("#check-set").attr("disabled", false);
+		} else {
+			$("#check-set").addClass("disabled");
+			$("#check-set").attr("disabled", true);
+		}
+	}
+
+	// deals with keydown event in multiplayer games
+	function callSet(e) {
+		if (game.currentPlayer !== -1) {
+			// some player has already called set
+			return;
+		}
+		// No player has called set yet
+		game.currentPlayer = game.playerKeys.indexOf(e.code);
+		if (game.playerKeys.indexOf(e.code) === -1) {
+			// no player assigned to this key
+			return;
+		}
+		// run timer
+		let time = 1000;
+		timer = setInterval(() => {
+			$("#announcement").removeClass('invalid-color valid-color');
+			$("#announcement").css('visibility', 'visible');
+			$("#announcement").text((time / 100).toFixed(1));
+			time -= 10;
+		}, 100);
+
+		// clear set it 10 seconds
+		maxTimeout = setTimeout(() => {
+			// loose a point, they ran out of time
+			game.playerScores[game.currentPlayer]--;
+			updateScore(game.currentPlayer);
+
+			// announce out of time
+			setAnnouncement("Out of Time!", false);
+
+			// reset currentPlayer
+			game.currentPlayer = -1;
+
+			// deselect all cards
+			clearWorkingSet();
+
+			clearSet();
+		}, 10000);
+	}
+
+	/* ----------HELPER FUNCTIONS---------- */
+
+	// set up event triggers appropriate for single player
+	function singlePlayerSetUp() {
+		$("#give-up").css("display", "block");
+
+		$("#check-set").on("click", singlePlayerCheckSet);
+		$("#table").on("click", ".card-cover", cardClick);
+	}
+
+	// set up event triggers appropriate for multiplayer
+	function multiPlayerSetUp() {
+		$("#give-up").css("display", "none");
+
+		// show player scores
+		for (let playerIndex = 0; playerIndex < game.playerCount; playerIndex++) {
+			$($(".constant-score").get(playerIndex)).css('visibility', 'visible');
+		}
+
+		$("#check-set").on("click", multiPlayerCheckSet);
+		$("#table").on("click", ".card-cover", (e) => {
+			if (game.currentPlayer !== -1) {
+				// someone called set
+				cardClick(e);
+			}
+		});
+		$(document).on("keypress", callSet);
+	}
+
+	// updates the displayed score for the player index given
+	function updateScore(playerIndex) {
+		$($(".constant-score").get(playerIndex)).children(".points").text(`${game.playerScores[playerIndex]} Points`);
+	}
+
+	// clears timer and interval
+	// reset "Test Selected" button
+	function clearSet() {
+		clearInterval(timer);
+		clearTimeout(maxTimeout);
+
+		$("#check-set").addClass("disabled");
+		$("#check-set").attr("disabled", true);
+	}
 
 	// renders an array of cards to the table
 	// each object in the cards array contains their index and the card
@@ -204,16 +361,17 @@ $(document).ready(() => {
 	}
 
 	// sets announcement header and makes visible for set time
-	function setAnnouncement(valid, time) {
+	function setAnnouncement(text, valid, time) {
+		console.log(text);
+
 		if (valid) {
 			$("#announcement").addClass('valid-color');
 			$("#announcement").removeClass('invalid-color');
-			$("#announcement").text("Correct!");
 		} else {
 			$("#announcement").addClass('invalid-color');
 			$("#announcement").removeClass('valid-color');
-			$("#announcement").text("Wrong!");
 		}
+		$("#announcement").text(text);
 		$("#announcement").css('visibility', 'visible');
 		setTimeout(() => {
 			$("#announcement").css('visibility', 'hidden');

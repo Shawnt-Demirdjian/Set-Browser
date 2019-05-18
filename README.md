@@ -1,7 +1,9 @@
 # Set-Browser
 > ### SET, but in your Browser!
 
-Check it out on GitHub Pages [here](https://shawnt-demirdjian.github.io/Set-Browser/)!
+Check out an in-development version on GitHub Pages [here](https://shawnt-demirdjian.github.io/Set-Browser/)!
+
+Check out a stable release on my personal site [here](https://shawntdemirdjian.com/set)!
 
 Check out the original tabletop game [here](https://www.setgame.com/).
 
@@ -20,10 +22,17 @@ SET is a puzzle, competitive card game. You can see the rules [here](https://www
   - Up to 4 players
   - One player is a 'practice' mode
 - Design
+  - Highlight Current Player
+  - Display Player Keys
   - Light/Dark Themes
   - Animations
+  - Hide Help in Dropdown
 - Settings
   - Toggle Auto Add if not possible
+  - Player Keys
+  - Player Names
+  - Player Handicaps
+  - Disable all Help
   - Limit Shuffles
   - Limit Give Up's
   - Limit Add More Cards
