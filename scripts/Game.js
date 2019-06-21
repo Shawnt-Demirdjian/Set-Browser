@@ -99,4 +99,49 @@ class Game {
 	shuffleTable() {
 		return Deck.shufflePartialDeck(this.table);
 	}
+
+	/* GETTERS/SETTERS */
+
+	// returns the number of players
+	getPlayerCount() {
+		return this.playerCount;
+	}
+
+	// returns key of player by index
+	getPlayerKey(playerIndex) {
+		if (playerIndex >= 0 && playerIndex < this.playerCount) {
+			return this.playerKeys[playerIndex];
+		}
+		// TODO: error handle, bad input
+	}
+
+	// returns the index of player by their assigned key
+	// returns -1 if key does not belong to player
+	getPlayerIndex(playerKey) {
+		return this.playerKeys.indexOf(playerKey);
+	}
+
+	// returns player scores array
+	getPlayerScores() {
+		return this.playerScores;
+	}
+
+	// decreases player score by 1
+	// returns new score
+	decrementPlayerScore(playerIndex) {
+		if (playerIndex >= 0 && playerIndex < this.playerCount) {
+			return --this.playerScores[playerIndex];
+		}
+		// TODO: error handle, bad input
+	}
+
+	// increases player score by 1
+	// returns new score
+	incrementPlayerScore(playerIndex) {
+		if (playerIndex >= 0 && playerIndex < this.playerCount) {
+			return ++this.playerScores[playerIndex];
+		}
+		// TODO: error handle, bad input
+	}
+
 }
