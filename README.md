@@ -19,6 +19,15 @@ SET is a puzzle, competitive card game. You can see the rules [here](https://www
   - Display and track scores
   - Up to 4 players
   - One player is a 'practice' mode
+- Track Stats for Single Player 'practice' mode
+  - Should be per-game and lifetime stats where appropriate
+  - Correct Streak
+  - Fastest, worst, average times
+  - Number correct/incorrect
+  - Number of Give Up's
+  - Number of (unnecessary) Add More Card's
+  - Number of Is it Possibles?'s
+  - Number of Shuffles
 - Design
   - Light/Dark Themes
   - Animations
