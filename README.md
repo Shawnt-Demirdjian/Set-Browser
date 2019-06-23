@@ -29,7 +29,6 @@ SET is a puzzle, competitive card game. You can see the rules [here](https://www
   - Number of Is it Possibles?'s
   - Number of Shuffles
 - Design
-  - Light/Dark Themes
   - Animations
 - Settings
   - Toggle Auto Add if not possible

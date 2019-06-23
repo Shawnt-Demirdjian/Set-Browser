@@ -146,6 +146,28 @@ $(document).ready(() => {
 		$("#endgame-background").addClass("display-none");
 	});
 
+	// "Theme Switch constant button"
+	// Invert color theme
+	$("#theme-switch").on('click', () => {
+		if ($("#theme-switch").attr("data-theme") === "dark") {
+			// switch to light mode
+			document.body.style.setProperty('--bg-color', "white");
+			document.body.style.setProperty('--text-color', "rgb(26, 26, 26)");
+
+			// swap icon and data-theme
+			$("#theme-switch").html("&#9789;");
+			$("#theme-switch").attr("data-theme", "light");
+		} else {
+			// switch to dark mode
+			document.body.style.setProperty('--bg-color', "rgb(26, 26, 26)");
+			document.body.style.setProperty('--text-color', "white");
+
+			// swap icon and data-theme
+			$("#theme-switch").html("&#9728;");
+			$("#theme-switch").attr("data-theme", "dark");
+		}
+	});
+
 	// "Shuffle" Button
 	// Reorder the cards on the table
 	$("#shuffle-table").on("click", () => {
