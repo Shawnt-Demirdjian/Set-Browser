@@ -1,12 +1,16 @@
 // Holds all information for a single game and its current state
 class Game {
-	constructor(playerCount, keys) {
+	constructor(playerCount, keys, endGameCB) {
 		this.playerCount = playerCount || 1; // defaults to single player
 		this.playerKeys = keys; // the keys that belong to each player in order
-		this.playerScores = [0, 0, 0, 0]; // player scores in order
+		this.playerScores = []; // player scores in order
+		this.playerScores.length = playerCount; // initialize playerScores array to be only as long as we have players
+		this.playerScores.fill(0); // initialize all player scores to zero
 		this.gameDeck = new Deck();
 		this.workingSet = []; // the currently selected set (index only)
 		this.table = []; // the cards currently on the table (index only)
+		this.endGameCB = endGameCB; // the function to be called when the game is finished
+		this.isGameDone = false; // ensures endGameCB is only called once
 	}
 
 	/* ------INSTANCE METHODS------ */
@@ -14,7 +18,7 @@ class Game {
 	// returns true if the cards in workingSet are a valid Set, false otherwise
 	// remove cards from table if valid
 	// rules of what makes a set: https://www.setgame.com/sites/default/files/instructions/SET%20INSTRUCTIONS%20-%20ENGLISH.pdf
-	checkSet() {
+	testWorkingSet() {
 		// check number of cards
 		if (this.workingSet.length !== 3) {
 			return false;
@@ -25,6 +29,8 @@ class Game {
 			this.gameDeck.deck[this.workingSet[1]],
 			this.gameDeck.deck[this.workingSet[2]]
 		];
+
+		let result = false;
 
 		if ((cards[0].number === cards[1].number && cards[1].number === cards[2].number) ||
 			(cards[0].number !== cards[1].number && cards[1].number !== cards[2].number && cards[0].number !== cards[2].number)) {
@@ -43,13 +49,17 @@ class Game {
 						this.table.splice(this.table.indexOf(parseInt(this.workingSet[0])), 1);
 						this.table.splice(this.table.indexOf(parseInt(this.workingSet[1])), 1);
 						this.table.splice(this.table.indexOf(parseInt(this.workingSet[2])), 1);
-						return true;
+						result = true;
 					}
 				}
 			}
 		}
-		// some test failed
-		return false;
+		if (this.testEndgame() && !this.isGameDone) {
+			// fire endGame
+			this.isGameDone = true;
+			this.endGameCB();
+		}
+		return result;
 	}
 
 	// fills table with first 12 cards
@@ -70,6 +80,11 @@ class Game {
 				index: this.gameDeck.nextCardIndex - 1
 			});
 			this.table.push(this.gameDeck.nextCardIndex - 1);
+		}
+		if (this.testEndgame() && !this.isGameDone) {
+			// fire endGame
+			this.isGameDone = true;
+			this.endGameCB();
 		}
 		return newAdditions;
 	}
@@ -142,6 +157,63 @@ class Game {
 			return ++this.playerScores[playerIndex];
 		}
 		// TODO: error handle, bad input
+	}
+
+	// checks if a card's index is in the workingSet
+	// returns index of card in workingSet
+	// returns -1 if not found
+	isInWorkingSet(cardIndex) {
+		if (cardIndex >= 0 && cardIndex < this.gameDeck.deck.length) {
+			return this.workingSet.indexOf(cardIndex);
+		}
+		// TODO: error handle, bad input
+	}
+
+	// adds a card index to workingSet
+	// returns true if successully added or already present
+	// returns false if workingSet is full
+	addToWorkingSet(cardIndex) {
+		if (this.workingSet.length === 3) {
+			// workingSet is full
+			return false;
+		}
+		if (cardIndex >= 0 && cardIndex < this.gameDeck.deck.length) {
+			if (this.isInWorkingSet(cardIndex) === -1) {
+				this.workingSet.push(cardIndex);
+			}
+			return true;
+		}
+		// TODO: error handle, bad input
+	}
+
+	// removes a card index from workingSet
+	// returns true if successfully removed
+	// returns false if not present
+	removeFromWorkingSet(cardIndex) {
+		if (cardIndex >= 0 && cardIndex < this.gameDeck.deck.length) {
+			let cardIndexInWorkingSet = this.isInWorkingSet(cardIndex);
+			if (cardIndexInWorkingSet !== -1) {
+				this.workingSet.splice(cardIndexInWorkingSet, 1);
+				return true;
+			}
+			return false;
+		}
+		// TODO: error handle, bad input
+	}
+
+	// returns the length of the workingSet
+	getWorkingSetLength() {
+		return this.workingSet.length;
+	}
+
+	// empties the workingSet
+	clearWorkingSet() {
+		this.workingSet.length = 0;
+	}
+
+	// returns the length of the table
+	getTableLength() {
+		return this.table.length;
 	}
 
 }

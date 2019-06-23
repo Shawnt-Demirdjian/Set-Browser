@@ -23,15 +23,12 @@ $(document).ready(() => {
 	// add 3 new cards to table if available
 	// disable add cards button
 	$("#add-cards").on("click", (e) => {
-		if (game.gameDeck.hasNext() && game.table.length <= 12) {
+		if (game.gameDeck.hasNext() && game.getTableLength() <= 12) {
 			let newlyAdded = game.addCardsToTable(3);
 			renderCardsToTable(newlyAdded);
 			$("#add-cards").addClass("disabled");
 			$("#add-cards").attr("disabled", true);
 			$("#table").addClass("large-table");
-			if (game.testEndgame()) {
-				endgame();
-			}
 		}
 	});
 
@@ -41,12 +38,12 @@ $(document).ready(() => {
 	// enable, "Add More Cards", Disable "Test Selected",
 	// clear workingSet
 	$("#check-set").on("click", (e) => {
-		let result = game.checkSet();
+		let result = game.testWorkingSet();
 		if (result) {
 			// is a valid set
 			setAnnouncement(true);
 			removeCards();
-			if (game.table.length <= 9) {
+			if (game.getTableLength() <= 9) {
 				// Only replace cards if extra 3 weren't added
 				let newlyAdded = game.addCardsToTable(3);
 				renderCardsToTable(newlyAdded);
@@ -69,9 +66,6 @@ $(document).ready(() => {
 		}
 		$("#check-set").addClass("disabled");
 		$("#check-set").attr("disabled", true);
-		if (game.testEndgame()) {
-			endgame();
-		}
 	});
 
 	// "Is it Possible?" Button
@@ -93,17 +87,17 @@ $(document).ready(() => {
 		// get the index of the card the selected
 		let selectedCardIndex = targetCard.attr("data-cardIndex");
 		// get the index of the card in the workingSet (if selected already)
-		let selectedIndex = game.workingSet.indexOf(selectedCardIndex);
-		if (selectedIndex === -1 && game.workingSet.length !== 3) {
+		let selectedIndex = game.isInWorkingSet(selectedCardIndex);
+		if (selectedIndex === -1 && game.getWorkingSetLength() !== 3) {
 			// select
 			// make active and push onto workingSet
 			targetCard.addClass("card-active");
-			game.workingSet.push(selectedCardIndex);
+			game.addToWorkingSet(selectedCardIndex);
 		} else if (selectedIndex !== -1) {
 			// deselect
 			// remove active and remove from workingSet
 			targetCard.removeClass("card-active");
-			game.workingSet.splice(selectedIndex, 1);
+			game.removeFromWorkingSet(selectedCardIndex);
 		}
 
 		// Show/hide "Test Selected" button based on number of cards selected
@@ -150,7 +144,7 @@ $(document).ready(() => {
 
 		// reorder Board
 		newOrder.forEach((newIndex) => {
-			$("#table").append($(`.card[data-cardIndex=${newIndex}]`));
+			$("#table").append($(`.card[data-cardIndex=${ newIndex }]`));
 		});
 	});
 
@@ -168,8 +162,8 @@ $(document).ready(() => {
 
 		// select the SET
 		validSet.forEach((index) => {
-			console.log($(`.card[data-cardIndex=${index}]`))
-			$(`.card[data-cardIndex=${index}]`).children(".card-cover").trigger("click");
+			console.log($(`.card[data-cardIndex=${ index }]`))
+			$(`.card[data-cardIndex=${ index }]`).children(".card-cover").trigger("click");
 		});
 	});
 
@@ -179,9 +173,9 @@ $(document).ready(() => {
 	// each object in the cards array contains their index and the card
 	function renderCardsToTable(cardsArr) {
 		cardsArr.forEach((element) => {
-			let cardElement = `<div class="card card-${element.card.color}" data-cardIndex=${element.index}>`;
+			let cardElement = `<div class="card card-${ element.card.color }" data-cardIndex=${ element.index }>`;
 			for (let i = 0; i < element.card.number; i++) {
-				cardElement += `<img class="shape" src="images/${element.card.shape}/${element.card.shading}/${element.card.color}.svg">`;
+				cardElement += `<img class="shape" src="images/${ element.card.shape }/${ element.card.shading }/${ element.card.color }.svg">`;
 			}
 			cardElement += "<div class='card-cover'></div></div>";
 			$("#table").append(cardElement);
@@ -191,16 +185,16 @@ $(document).ready(() => {
 	// removes cards in workingSet from table
 	function removeCards() {
 		game.workingSet.forEach(element => {
-			$(`.card[data-cardIndex=${element}]`).remove();
+			$(`.card[data-cardIndex=${ element }]`).remove();
 		});
 	}
 
 	// clears the workingSet and deselects all cards
 	function clearWorkingSet() {
 		game.workingSet.forEach(element => {
-			$(`.card[data-cardIndex=${element}]`).removeClass("card-active");
+			$(`.card[data-cardIndex=${ element }]`).removeClass("card-active");
 		});
-		game.workingSet.length = 0;
+		game.clearWorkingSet();
 	}
 
 	// sets announcement header and makes visible for set time
@@ -238,14 +232,15 @@ $(document).ready(() => {
 	// Stop game and display Endgame Modal 
 	// game ends if the deck is empty and there are no possible SETs
 	function endgame() {
-		for (let playerIndex = 0; playerIndex < game.playerCount; playerIndex++) {
+		let playerScoresArr = game.getPlayerScores();
+		playerScoresArr.forEach((currScore, playerIndex) => {
 			$("#score-board").append(
 				`<tr class="score">
-					<td>Player ${playerIndex}</td>
-					<td>${game.playerScores[playerIndex]} Points</td>
+					<td>Player ${playerIndex }</td>
+					<td>${currScore } Points</td>
 				</tr>`
 			);
-		}
+		});
 		// show Endgame Modal
 		$("#endgame-background").removeClass("display-none");
 	}
