@@ -1,66 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<link rel="stylesheet" href="styles/index.css">
-	<title>SET</title>
-</head>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<link rel="stylesheet" href="styles/index.css">
+		<title>SET</title>
+	</head>
 
-<body>
-	<div id="game-board">
-		<!-- Title and Announcements -->
-		<h1 id="title">SET</h1>
-		<h2 id="announcement">SET</h2>
+	<body>
+		<div id="game-board">
+			<!-- Title. Timer and Scores -->
+			<div id="top-row">
+				<div class="constant-score">
+					<h2 class="player-name">Player 1</h2>
+					<hr>
+					<h3 class="points">0 Points</h3>
+				</div>
+				<div class="constant-score">
+					<h2 class="player-name">Player 2</h2>
+					<hr>
+					<h3 class="points">0 Points</h3>
+				</div>
+				<h1 id="title">SET</h1>
+				<div class="constant-score">
+					<h2 class="player-name">Player 3</h2>
+					<hr>
+					<h3 class="points">0 Points</h3>
+				</div>
+				<div class="constant-score">
+					<h2 class="player-name">Player 4</h2>
+					<hr>
+					<h3 class="points">0 Points</h3>
+				</div>
+			</div>
+			<!-- Announcements and Timer -->
+			<h2 id="announcement">SET</h2>
 
-		<!-- Table to be filled with cards -->
-		<div id="table" class="display-none"></div>
+			<!-- Table to be filled with cards -->
+			<div id="table" class="display-none"></div>
 
-		<!-- Game Buttons -->
-		<div id="game-buttons" class="display-none">
-			<button id="add-cards" class="button">Add More Cards</button>
-			<button id="check-set" class="button disabled" disabled>Test Selected</button>
-			<button id="is-possible" class="button">Is it Possible?</button>
-			<button id="shuffle-table" class="button">Shuffle</button>
-			<button id="give-up" class="button">Give Up</button>
+			<!-- Game Buttons -->
+			<div id="game-buttons" class="display-none">
+				<button id="add-cards" class="button">Add More Cards</button>
+				<button id="check-set" class="button disabled" disabled>Test Selected</button>
+				<button id="is-possible" class="button">Is it Possible?</button>
+				<button id="shuffle-table" class="button">Shuffle</button>
+				<button id="give-up" class="button">Give Up</button>
+			</div>
+
+			<!-- Main Menu -->
+			<div id="main-menu">
+				<button data-playerCount="1" class="start-btn button">One Player</button>
+				<button data-playerCount="2" class="start-btn button disabled" disabled>Two Player</button>
+				<button data-playerCount="3" class="start-btn button disabled" disabled>Three Player</button>
+				<button data-playerCount="4" class="start-btn button disabled" disabled>Four Player</button>
+			</div>
 		</div>
 
-		<!-- Main Menu -->
-		<div id="main-menu">
-			<button data-playerCount="1" class="start-btn button">One Player</button>
-			<button data-playerCount="2" class="start-btn button disabled" disabled>Two Player</button>
-			<button data-playerCount="3" class="start-btn button disabled" disabled>Three Player</button>
-			<button data-playerCount="4" class="start-btn button disabled" disabled>Four Player</button>
+		<!-- Constant Menu -->
+		<div id="constant-menu">
+			<span id="theme-switch" class="constant-btn disabled">&#9728;</span>
+			<span class="exit invalid-color constant-btn">&#x2716;</span>
 		</div>
-	</div>
 
-	<!-- Constant Menu -->
-	<div id="constant-menu">
-		<span id="theme-switch" class="constant-btn disabled">&#9728;</span>
-		<span class="exit invalid-color constant-btn">&#x2716;</span>
-	</div>
-
-	<!-- Endgame Modal -->
-	<div id="endgame-background" class="display-none">
-		<div id="endgame-modal">
-			<h1>Game Over</h1>
-			<hr>
-			<h2>Scores:</h2>
-			<table id="score-board">
-			</table>
-			<button class="exit button">Done</button>
+		<!-- Endgame Modal -->
+		<div id="endgame-background" class="display-none">
+			<div id="endgame-modal">
+				<h1>Game Over</h1>
+				<hr>
+				<h2>Scores:</h2>
+				<table id="score-board">
+				</table>
+				<button class="exit button">Done</button>
+			</div>
 		</div>
-	</div>
 
-	<script src="dependencies/js-combinatorics/combinatorics.js"></script>
-	<script src="dependencies/jquery/dist/jquery.slim.min.js"></script>
-	<script src="scripts/def.js"></script>
-	<script src="scripts/Card.js"></script>
-	<script src="scripts/Deck.js"></script>
-	<script src="scripts/Game.js"></script>
-	<script src="scripts/index.js"></script>
-</body>
+		<script src="dependencies/js-combinatorics/combinatorics.js"></script>
+		<script src="dependencies/jquery/dist/jquery.slim.min.js"></script>
+		<script src="scripts/def.js"></script>
+		<script src="scripts/Card.js"></script>
+		<script src="scripts/Deck.js"></script>
+		<script src="scripts/Game.js"></script>
+		<script src="scripts/index.js"></script>
+	</body>
 
 </html>

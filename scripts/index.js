@@ -14,6 +14,11 @@ $(document).ready(() => {
 		renderCardsToTable(game.startGame());
 
 		// Hide menu, show game
+		// show player scores
+		for (let playerIndex = 0; playerIndex < game.getPlayerCount(); playerIndex++) {
+			$($(".constant-score").get(playerIndex)).css('visibility', 'visible');
+		}
+
 		$("#main-menu").addClass("display-none");
 		$("#table").removeClass("display-none");
 		$("#game-buttons").removeClass("display-none");
@@ -42,6 +47,7 @@ $(document).ready(() => {
 		if (result) {
 			// is a valid set
 			setAnnouncement(true);
+			game.incrementPlayerScore(0);
 			removeCards();
 			if (game.getTableLength() <= 9) {
 				// Only replace cards if extra 3 weren't added
@@ -62,10 +68,12 @@ $(document).ready(() => {
 		} else {
 			// not a valid set
 			setAnnouncement(false);
+			game.decrementPlayerScore(0);
 			clearWorkingSet();
 		}
 		$("#check-set").addClass("disabled");
 		$("#check-set").attr("disabled", true);
+		updateScore(0);
 	});
 
 	// "Is it Possible?" Button
@@ -133,6 +141,8 @@ $(document).ready(() => {
 		$("#table").addClass("display-none");
 		$("#game-buttons").addClass("display-none");
 		$("#main-menu").removeClass("display-none");
+		$(".constant-score").css('visibility', 'hidden');
+		$(".points").text("0 Points");
 		$("#endgame-background").addClass("display-none");
 	});
 
@@ -227,6 +237,11 @@ $(document).ready(() => {
 			$("#is-possible").removeClass("invalid-color valid-color");
 			$("#is-possible").text("Is it Possible?");
 		}, time || 1000);
+	}
+
+	// updates the displayed score for the player index given
+	function updateScore(playerIndex) {
+		$($(".constant-score").get(playerIndex)).children(".points").text(`${ game.getPlayerScores()[playerIndex] } Points`);
 	}
 
 	// Stop game and display Endgame Modal 

@@ -40,19 +40,42 @@ body {
 	height: 100%;
 }
 
-/* Page Title */
-#title {
-	font-size: 3em;
-	margin: 0px;
-	margin-top: 0.3em;
+/* Top Row: Title and Scores */
+#top-row {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-around;
+
+	margin-top: 1em;
+	width: 100%
 }
 
-/* announcement header: Correct! or Wrong! */
+.constant-score {
+	visibility: hidden;
+	margin: 0 1em;
+	text-align: center;
+}
+
+.player-name {
+	margin: 0;
+}
+
+.points {
+	margin: 0;
+}
+
+#title {
+	font-size: 3em;
+	margin: 0;
+	align-self: flex-start;
+}
+
+/* announcements and timer */
 #announcement {
 	visibility: hidden;
 	font-style: italic;
 	margin-top: 0.5em;
-	margin-bottom: 0.5em;
 }
 
 .valid-color {
