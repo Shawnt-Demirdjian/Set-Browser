@@ -199,6 +199,22 @@ $(document).ready(() => {
 		});
 	});
 
+	// "Help" button
+	// expand menu to include help options
+	$(".help-slider").on("click", (e) => {
+		// show/hide help buttons
+		$(".help-button").toggle();
+
+		// switch arrow
+		if ($(".help-slider").attr("data-arrow") === "right") {
+			$(".help-slider").html("&#9664;");
+			$(".help-slider").attr("data-arrow", "left");
+		} else {
+			$(".help-slider").html("&#9654;");
+			$(".help-slider").attr("data-arrow", "right");
+		}
+	});
+
 	/* ----------FUNCTIONS---------- */
 
 	// renders an array of cards to the table

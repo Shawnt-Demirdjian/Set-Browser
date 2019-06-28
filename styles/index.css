@@ -173,6 +173,7 @@ body {
 	padding: 0.7em;
 	margin: 0.5em 0em;
 	width: 9em;
+	height: 2.7em;
 
 	color: var(--text-color);
 	background-color: var(--bg-color);
@@ -190,6 +191,15 @@ body {
 
 .button:active {
 	background-color: var(--card-active) !important;
+}
+
+/* Button to expand help options */
+.help-slider {
+	width: unset;
+}
+
+.help-button {
+	display: none;
 }
 
 /* Endgame Modal */
